@@ -428,18 +428,11 @@ export class WebCrawler {
       if (fromMap && onlySitemap) {
         return await urlsHandler(urls);
       } else {
-        const filterStartTime = process.hrtime();
         let filteredLinksResult = await this.filterLinks(
           [...new Set(urls)],
           leftOfLimit,
           this.maxCrawledDepth,
           fromMap,
-        );
-        const filterTime = process.hrtime(filterStartTime);
-        console.log(
-          `Filtering ${urls.length} sitemap links took`,
-          (filterTime[0] * 1000 + filterTime[1] / 1000000).toFixed(2),
-          "ms",
         );
         let filteredLinks = filteredLinksResult.links;
         leftOfLimit -= filteredLinks.length;
