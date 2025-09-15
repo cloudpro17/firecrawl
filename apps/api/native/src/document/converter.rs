@@ -1,8 +1,8 @@
 use crate::document::document::Document;
 use crate::document::providers::factory::{DocumentType, ProviderFactory};
 use crate::document::renderers::html::HtmlRenderer;
-use napi_derive::napi;
 use napi::bindgen_prelude::*;
+use napi_derive::napi;
 
 #[napi]
 #[derive(Debug)]
