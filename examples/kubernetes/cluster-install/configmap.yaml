@@ -12,3 +12,4 @@ data:
   ENV: "production"
   LOGGING_LEVEL: "DEBUG"
   IS_KUBERNETES: "true"
+  NUQ_DATABASE_URL: "postgresql://user:password@postgres:5432/firecrawl"
