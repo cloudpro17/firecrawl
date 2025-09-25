@@ -442,18 +442,37 @@ fn _transform_html_inner(opts: TransformHtmlOptions) -> Result<String, Box<dyn s
   }
 
   if opts.only_main_content {
-    for x in EXCLUDE_NON_MAIN_TAGS.iter() {
-      let x: Vec<_> = document
-        .select(x)
+    let total_text_length: usize = document
+      .text_contents()
+      .chars()
+      .filter(|c| !c.is_whitespace())
+      .count();
+
+    for selector in EXCLUDE_NON_MAIN_TAGS.iter() {
+      let selected_tags: Vec<_> = document
+        .select(selector)
         .map_err(|_| "Failed to select tags")?
         .collect();
-      for tag in x {
-        if !FORCE_INCLUDE_MAIN_TAGS.iter().any(|x| {
+
+      for tag in selected_tags {
+        let tag_text_length: usize = tag
+          .as_node()
+          .text_contents()
+          .chars()
+          .filter(|c| !c.is_whitespace())
+          .count();
+
+        let is_significant =
+          total_text_length > 0 && (tag_text_length as f64) / (total_text_length as f64) >= 0.50;
+
+        let has_force_include = FORCE_INCLUDE_MAIN_TAGS.iter().any(|force_selector| {
           tag
             .as_node()
-            .select(x)
+            .select(force_selector)
             .is_ok_and(|mut x| x.next().is_some())
-        }) {
+        });
+
+        if !has_force_include && !is_significant {
           tag.as_node().detach();
         }
       }
