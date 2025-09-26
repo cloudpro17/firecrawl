@@ -129,8 +129,16 @@ export async function batchScrape(
   urls: string[],
   opts: BatchScrapeOptions & { pollInterval?: number; timeout?: number } = {}
 ): Promise<BatchScrapeJob> {
-  const start = await startBatchScrape(http, urls, opts);
-  return waitForBatchCompletion(http, start.id, opts.pollInterval ?? 2, opts.timeout);
+  const { timeout, pollInterval, ...batchOpts } = opts;
+  
+  if (timeout !== undefined && batchOpts.options) {
+    batchOpts.options = { ...batchOpts.options, timeout };
+  } else if (timeout !== undefined) {
+    batchOpts.options = { timeout };
+  }
+  
+  const start = await startBatchScrape(http, urls, batchOpts);
+  return waitForBatchCompletion(http, start.id, pollInterval ?? 2, timeout);
 }
 
 export function chunkUrls(urls: string[], chunkSize = 100): string[][] {
