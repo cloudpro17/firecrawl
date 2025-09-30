@@ -1,4 +1,5 @@
 use super::docx::DocxProvider;
+use super::excel::ExcelProvider;
 use super::odt::OdtProvider;
 use super::rtf::RtfProvider;
 use super::DocumentProvider;
@@ -10,12 +11,14 @@ pub enum DocumentType {
   Docx,
   Rtf,
   Odt,
+  Excel,
 }
 
 pub struct ProviderFactory {
   docx_provider: DocxProvider,
   rtf_provider: RtfProvider,
   odt_provider: OdtProvider,
+  excel_provider: ExcelProvider,
 }
 
 impl ProviderFactory {
@@ -24,6 +27,7 @@ impl ProviderFactory {
       docx_provider: DocxProvider::new(),
       rtf_provider: RtfProvider::new(),
       odt_provider: OdtProvider::new(),
+      excel_provider: ExcelProvider::new(),
     }
   }
 
@@ -32,6 +36,7 @@ impl ProviderFactory {
       DocumentType::Docx => &self.docx_provider,
       DocumentType::Rtf => &self.rtf_provider,
       DocumentType::Odt => &self.odt_provider,
+      DocumentType::Excel => &self.excel_provider,
     }
   }
 }

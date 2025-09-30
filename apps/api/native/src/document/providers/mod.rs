@@ -2,6 +2,7 @@ use crate::document::model::Document;
 use std::error::Error;
 
 pub mod docx;
+pub mod excel;
 pub mod factory;
 pub mod odt;
 pub mod rtf;
